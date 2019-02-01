@@ -1,43 +1,80 @@
+import jdk.jshell.execution.Util;
+
 public class Gladiator {
     private String name;
-    private int health;
+    private int curHealth;
+    private int maxHealth;
     private int rage;
-    private int damage_low;
-    private int damage_high;
+    private int damageLow;
+    private int damageHigh;
+    private int lastDamageDealt = 0;
+    private int lastHeal = 0;
 
 
-    public Gladiator(String setName,int setHealth, int setRage, int setDL, int setDH){
+    public Gladiator(String setName,int setMaxHealth, int setRage, int setDL, int setDH){
         name = setName;
-        health = setHealth;
+        maxHealth = setMaxHealth;
+        curHealth = maxHealth;
         rage = setRage;
-        damage_low = setDL;
-        damage_high = setDL;
+        damageLow = setDL;
+        damageHigh = setDH;
     }
 
     public String getName() {
         return name;
     }
-    public int getDamage_low() {
-        return damage_low;
+    public int getMaxHealth() {
+        return maxHealth;
     }
-    public int getDamage_high() {
-        return damage_high;
+    public int getCurHealth() {
+        return curHealth;
     }
-    public int getHealth() {
-        return health;
-    }
-    public void setHealth(int h) {
-        health = h;
+    public void setCurHealth(int h) {
+        this.curHealth = h;
     }
     public int getRage() {
         return rage;
     }
     public void setRage(int r) {
-        rage = r;
+        this.rage = r;
     }
 
     @Override
     public String toString() {
-        return String.format("%s: %s HP ||| %s Rage", name, health, rage);
+        return String.format("%s: %s/%s HP ||| %s Rage", name, curHealth, maxHealth, rage);
+    }
+    public int getAttackDmg() {
+        return Utility.randInt(damageLow, damageHigh + 1);
+    }
+
+    public int getLastDamageDealt() {
+        return lastDamageDealt;
+    }
+    public void setLastDamageDealt(int lastDamageDealt) {
+        this.lastDamageDealt = lastDamageDealt;
+    }
+
+    public boolean canCrit() {
+//        checks to see if the gladiator has the ability to crit
+        int critChance = Utility.randInt(1, 100);
+        return critChance <= rage;
+    }
+
+    public boolean canHeal() {
+//        checks to see if the gladiator can heal
+        if (curHealth == maxHealth) {
+            return false;
+        }
+        else if (curHealth + 10 >= maxHealth && rage >= 15) {
+            return true;
+        }
+        return rage >= 15;
+    }
+    public int getLastHeal() {
+        return lastHeal;
+    }
+
+    public void setLastHeal(int lastHeal) {
+        this.lastHeal = lastHeal;
     }
 }
